@@ -1,0 +1,49 @@
+---
+title: "JEDI Audit - Data Cleaning"
+author: "Shashi Ponraja"
+date: "26/02/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Joondalup Cardiac Electronic  Device Implantation Audit - Data Cleaning
+
+This set of scripts is designed to convert all the raw data collected from our audit into a neat package
+
+1. Unify Device Information.xlsx into a single data frame / csv file
+
+2. Categorize all equipment by device type
+
+3. Produce a list of all devices every individual patient has had inserted
+
+4. Create a giant data frame that has all our data in it
+
+5. Take the compiled data and transmogrify into one epic data set
+
+6. Give it to somebody else to sort out
+
+7. ???
+
+8. Profit
+
+To Do list
+Extract a list of all equipment used, and classify its device type
+De-identify data
+
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
