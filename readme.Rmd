@@ -11,6 +11,103 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Joondalup Cardiac Electronic  Device Implantation Audit - Data Cleaning
 
+The JEDI Audit is an audit of all cardiac devices installed 2012- April 2017 and relevant complications
+Final Cleaned Data set contains 42 Variables
+
+ [1] "GenID"    
+ - newly generated ID, can be used to match up with the identified data set for cross checking
+
+ [2] "Age"                                               
+ - age at admission in years
+
+ [3] "Sex"                  
+ - M for male, F for female
+
+ 4:14 represent confirmed complications - 1 is TRUE ie they had a complication, 0 is FALSE ie no complications found
+
+ [4] "Confirmed.Infection"                               
+ [5] "Confirmed.Wound.Dehiscence"                        
+ [6] "Confirmed.haematoma"                               
+ [7] "Confirmed.cardiac.arrest"    
+ 
+ [8] "Confirmed.mechanical.complication" 
+ 
+ - encompasses lead dislodgments and fractures
+ 
+ [9] "Confirmed.Pneumothorax"                            
+[10] "Confirmed.pericarditis.myocarditis.or.endocarditis"
+[11] "Confirmed.accidental.puncture"                     
+[12] "Confirmed.pericardial.effusion.or.tamponade"       
+[13] "Confirmed.Twiddler.Syndrome"                       
+[14] "Confirmed.General.complication" 
+
+[15] "Cardiac Device Admissions"  
+
+15 is the total amount of cardiac device related admissions the patient had between 2012-2017
+
+16: 22 are device types patient had installed. 1 = this device type was installed, 0 = this device type was not installed
+
+[16] "PPM DC"      
+
+- dual chamber permanent pacemaker
+
+[17] "PPM SC"                    
+
+- single chamber permanent pacemaker
+
+[18] "PPM"                          
+
+- permanent pacemaker (not sure if it was a dual or single chamber)
+
+[19] "Loop recorder"                                     
+
+- long term implantable designed to detect arrhythmias
+
+[20] "CRT-D"                                  
+
+[21] "CRT-P"                                 
+
+CRTs are cardiac resynchronisation devices, they ensure the left and right heart beat in sync. D means it has a defibrillator function as well, P means it has a pacing function too
+
+[22] "ICD"                                               
+Implantable cardioverter defibrillators can defibrillate patients whose hearts are at risk of arrhythmias
+
+[23] "Known Device" 
+- data on device types was only available for 2013-17, so people who didn't have a known device installed will have this set to 1
+
+24:27 - brand type(s) patient has had installed
+
+[24] "BIOTRONIK"                                         
+[25] "Boston Scientific"                                 
+[26] "Medtronic"                                         
+[27] "ST JUDE MEDICAL"   
+
+28: 42 are management of complication flags
+
+[28] "Blood.cultures"
+
+1 = grew bacteria, 0 = no growth or no sample taken
+
+[29] "Wound.MC&S"                     
+
+1 = grew bacteria, 0 = no growth or no sample taken
+
+30:42 - 1 = event is true, 0 = event is false
+
+[30] "Fever.>=.38C"                                      
+[31] "IV.Antibiotics"                                    
+[32] "PO.antibiotics"                                    
+[33] "Debridement"                                       
+[34] "Wound.revision"                                    
+[35] "Evacuation"                                        
+[36] "Washout"                                           
+[37] "Explantation"                                      
+[38] "Reimplantation"                                    
+[39] "Abandoned.lead"                                    
+[40] "Repositioned.lead"                                 
+[41] "intercostal.catheter.drainage"                     
+[42] "Pericardiocentesis.performed" 
+
 This set of scripts is designed to convert all the raw data collected from our audit into a neat package
 
 1. Unify Device Information.xlsx into a single data frame / csv file
@@ -21,29 +118,68 @@ This set of scripts is designed to convert all the raw data collected from our a
 
 4. Create a giant data frame that has all our data in it
 
-5. Take the compiled data and transmogrify into one epic data set
+5. Merge device data with complication data
 
-6. Give it to somebody else to sort out
+6. Convert it into a clean format that is SPSS friendly for statistician to conduct mathematics
 
-7. ???
-
-8. Profit
+7. Using analyzed data, write a paper for submission
 
 To Do list
 Extract a list of all equipment used, and classify its device type
 De-identify data
 
 
-```{r cars}
-summary(cars)
-```
+Step 5.
 
-## Including Plots
+Data that needs to be in epic transmogrified data set
 
-You can also embed plots, for example:
+Individualized patient UMRNS
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+New Numbers (once everyone is de-identified we can export columns 1 and 2 as a data file, and drop column 1 for the file we are statistifying)
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Total amount of pacemaker related admissions
+
+- we calculate this by 
+
+5.1. making a list of all MNs and ANs from our admit list
+
+5.2. adding all MNs and ANs from our complication table to this list
+
+5.3. dropping all non-unique ANs
+
+5.4. counting all MNs by occurrence
+
+5.6 sticking that column to our epic data set
+
+TRUE/FALSE statements for all complications i.e
+
+Haematoma / haemorrhage
+Pneumothorax
+Infection
+Lead fracture 
+Lead dislodgment
+Wound dehiscence
+Cardiac arrest
+Myo/peri/endocarditis
+Bacteraemia
+Pericardial effusion
+Cardiac tamponade
+
+We do this by sequentially going through each sheet, identifying the MNs that have a true, then changing the values in the giant table
+
+We also add TRUE/FALSE statements for management
+
+Wound debridement
+Wound revision
+Lead repositioning
+Evacuation
+Antibiotics given
+Explantation
+Reimplantation
+Washout
+Chest drain insertion
+Pericardiocentesis
+
+
+Where information on what devices and brands have been inserted are available, add that to separate columns. If the device is not known, tag it as not known
+
